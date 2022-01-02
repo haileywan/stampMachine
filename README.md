@@ -1,2 +1,2 @@
 # stampMachine
-An ionic laravel App with passport authentication, QR code scanner and QR code generator.
+A ditgial stamp card app using ionic and laravel passport authentication, QR code scanner and QR code generator.
