@@ -1,0 +1,73 @@
+
+<ion-header>
+  <ion-toolbar>
+    <img class="centered" src="../../../assets/icon/stamp.png">
+
+    <ion-buttons slot="end" (click)="logout()">
+      <ion-icon name="log-out-outline" size="large" slot="end"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header *ngIf="user != undefined">
+     
+      <img src="../../../assets/icon/people.jpeg" />
+      <ion-card-title>Welcome Back!</ion-card-title>
+      <ion-card-subtitle>{{ user["username"]}}'s latest update:</ion-card-subtitle>
+
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ng-container *ngIf="user != undefined && user.typeofuser == 'customer'; else owner">
+        <ng-container *ngFor="let transaction of transactions|async">
+          <ng-container *ngIf="user.id == transaction.userid && transaction.item == '*Redeem Item*'">
+            <ion-item class="cardinfo"><ion-icon name="checkmark-circle-outline" color="danger" size="larger"></ion-icon> You redeemed {{transaction.qty}} item from {{transaction.ownername}} on {{transaction.created_at | date:'MM/dd/yyyy'}}!</ion-item>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-template #owner>
+        <ng-container *ngFor="let transaction of transactions|async">
+          <ng-container *ngIf="user.id == transaction.ownerid && transaction.item == '*Redeem Item*'">
+            <ion-item class="cardinfo"><ion-icon name="flame-outline" color="danger" size="larger"></ion-icon> User {{transaction.userid}} redeemed {{transaction.qty}} item from you on {{transaction.created_at | date:'MM/dd/yyyy'}}!</ion-item>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+  </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="end"> 
+
+        <ion-tab-button  *ngIf= "user != undefined && user.typeofuser == 'customer' " (click)="gotoqrcode()">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>QR Code</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'owner' " (click)="gotoqrscanner()">
+          <ion-icon name="scan-outline"></ion-icon>
+          <ion-label>QR Scanner</ion-label>
+        </ion-tab-button>
+    
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'customer' "(click)="gotocurrentstamp()">
+          <ion-icon name="ribbon-outline"></ion-icon>
+          <ion-label>Current Stamp</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'owner' "(click)="gotocurrentcus()">
+          <ion-icon name="ribbon-outline"></ion-icon>
+          <ion-label>Current Customer</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button>
+          <ion-icon name="happy-outline" (click)= "gotouserinfo()"></ion-icon>
+          <ion-label>User Info</ion-label>
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+ </ion-footer>

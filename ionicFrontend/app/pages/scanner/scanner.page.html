@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <img class="centered" src="../../../assets/icon/stamp.png" (click)="home()">
+
+    <ion-buttons slot="end" (click)="logout()">
+      <ion-icon name="log-out-outline" size="large" slot="end"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p class="spacing">1 Scan Qr code.<br>2 Choose type of item.<br>3 Press send</p>
+
+  <!--content for owner-->
+  <ion-item>
+    <div *ngIf= "user != undefined && user.typeofuser != 'customer' ">
+        <!--Scanner-->
+      
+        <ion-button (click)="startScanning()" color="dark" expand="full" shape="round" fill="outline">
+          Scan
+        </ion-button>
+      <form #form="ngForm" (ngSubmit)="transaction(form)" method="post">
+        <ion-item>
+          <ion-label position="floating">Owner Id : </ion-label>
+          <ion-input ngModel = {{user.id}} type="ownerid" name="ownerid" readonly> </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Owner name: </ion-label>
+          <ion-input ngModel = {{user.username}} type="ownername" name="ownername" readonly> </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">User Id : </ion-label>
+          <ion-input type="userid" ngModel = {{scannedCode}} name="userid"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Quantity : </ion-label>
+          <ion-input ngModel = "1" type="qty" name="qty" readonly></ion-input>
+        </ion-item>
+      
+        <ion-item>
+          <ion-label>Item: </ion-label>
+           <select name="item" ngModel="items">
+            <option ngValue="null">Select item</option>
+            <option *ngFor="let item of items" value={{item.name}}>{{item.name}}</option>
+          </select>
+        </ion-item>
+        &#160;
+        <ion-button type="submit" color="dark" expand="full" shape="round" fill="outline">Send</ion-button>
+
+      </form>
+    </div>
+
+  </ion-item>
+  <!--content for customr-->
+  <!--<ion-item>
+    <div *ngIf= "user != undefined && user.typeofuser != 'owner' ">
+      {{ user["typeofuser"]}}
+      {{ user["id"]}}
+    </div>
+  </ion-item>
+  <div *ngFor=" let transaction of transactions|async" >
+    <ng-container *ngIf="transaction.userid == user.id">
+      <p>{{transaction.item}}</p>
+    </ng-container>
+  </div>-->
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="footer">
+    <ion-tabs>
+      <ion-tab-bar class="tabbar" slot="end">
+
+        <ion-tab-button  *ngIf= "user != undefined && user.typeofuser == 'customer' " (click)="gotoqrcode()">
+          <ion-icon name="qr-code-outline"></ion-icon>
+          <ion-label>QR Code</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'owner'" (click)="gotoqrscanner()">
+          <ion-icon name="scan-outline"></ion-icon>
+          <ion-label>QR Scanner</ion-label>
+        </ion-tab-button>
+    
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'customer' "(click)="gotocurrentstamp()">
+          <ion-icon name="ribbon-outline"></ion-icon>
+          <ion-label>Current Stamp</ion-label>
+        </ion-tab-button>
+        <ion-tab-button *ngIf= "user != undefined && user.typeofuser == 'owner' "(click)="gotocurrentcus()">
+          <ion-icon name="ribbon-outline"></ion-icon>
+          <ion-label>Current Customer</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button>
+          <ion-icon name="happy-outline" (click)= "gotouserinfo()"></ion-icon>
+          <ion-label>User Info</ion-label>
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+ </ion-footer>
